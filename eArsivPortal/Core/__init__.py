@@ -7,6 +7,9 @@ from uuid     import uuid4
 from parsel   import Selector
 from .Hatalar import GirisYapilmadi, OturumSuresiDoldu, eArsivPortalHatasi
 
+from datetime import datetime
+from pytz     import timezone
+
 class eArsivPortal:
     def __init__(self, kullanici_kodu:str="33333301", sifre:str="1", test_modu:bool=True):
 
@@ -33,8 +36,8 @@ class eArsivPortal:
         if istek.status_code != 200 or veri.get("error"):
             try:
                 hata_metni = veri["messages"][0]["text"]
-            except Exception:
-                hata_metni = veri["error"]["messages"][0]
+            except TypeError:
+                hata_metni = veri["messages"][0]
 
             if "Oturum zamanaşımına uğradı" in hata_metni:
                 raise OturumSuresiDoldu(hata_metni)
@@ -89,26 +92,44 @@ class eArsivPortal:
 
         return veri.get("data")
 
+    def kisi_getir(self, vkn_veya_tckn:str):
+        veri = self.__kod_calistir(
+            komut = self.komutlar.MERNISTEN_BILGILERI_GETIR,
+            jp    = {
+                "vknTckn" : vkn_veya_tckn
+            }
+        )
+
+        return veri.get("data")
+
     def fatura_olustur(
         self,
         tarih:str         = "07/10/1995",
         saat:str          = "14:28:37",
+        vkn_veya_tckn:str = "11111111111",
         ad:str            = "Ömer Faruk",
         soyad:str         = "Sancak",
+        unvan:str         = "",
+        vergi_dairesi:str = "",
         urun_adi:str      = "Python Yazılım Hizmeti",
         fiyat:int | float = 100,
         fatura_notu:str   = "— QNB Finansbank —\nTR70 0011 1000 0000 0118 5102 59\nÖmer Faruk Sancak"
     ) -> bool:
+        kisi_bilgi = self.kisi_getir(vkn_veya_tckn)
+
         veri = self.__kod_calistir(
             komut = self.komutlar.FATURA_OLUSTUR,
             jp    = fatura_ver(
-                tarih       = tarih,
-                saat        = saat,
-                ad          = ad,
-                soyad       = soyad,
-                urun_adi    = urun_adi,
-                fiyat       = fiyat,
-                fatura_notu = fatura_notu,
+                tarih         = tarih or datetime.now(timezone("Turkey")).strftime("%d/%m/%Y"),
+                saat          = saat,
+                vkn_veya_tckn = vkn_veya_tckn,
+                ad            = kisi_bilgi.get("adi") or ad,
+                soyad         = kisi_bilgi.get("soyadi") or soyad,
+                unvan         = kisi_bilgi.get("unvan") or unvan,
+                vergi_dairesi = kisi_bilgi.get("vergiDairesi") or vergi_dairesi,
+                urun_adi      = urun_adi,
+                fiyat         = fiyat,
+                fatura_notu   = fatura_notu
             )
         )
 
@@ -119,7 +140,7 @@ class eArsivPortal:
             komut = self.komutlar.TASLAKLARI_GETIR,
             jp    =     {
                 "baslangic" : baslangic_tarihi,
-                "bitis"     : bitis_tarihi,
+                "bitis"     : bitis_tarihi or datetime.now(timezone("Turkey")).strftime("%d/%m/%Y"),
                 "hangiTip"  :"5000/30000",
                 "table"     : []
             }
