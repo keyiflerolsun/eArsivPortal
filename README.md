@@ -15,7 +15,10 @@
 [![Durum](https://img.shields.io/pypi/status/eArsivPortal?logo=windowsterminal&logoColor=white&label=Durum)](#)
 
 *GİB e-Arşiv Portal e-Fatura, e-SMM, e-Müstahsil Oluşturucu*
-> Bu paket [Fatih Kadir Akın](https://github.com/f)'ın hazırlamış olduğu [fatura](https://github.com/f/fatura) paketinin Python dili ile yazılmış versiyonudur.
+
+> Bu paket [Fatih Kadir Akın](https://github.com/f)'ın hazırlamış olduğu [fatura](https://github.com/f/fatura) `(js)` paketinin Python dili ile yazılmış versiyonudur.
+
+> Gelişim aşamasında [Mert Levent](https://github.com/mlevent)'in hazırlamış olduğu [fatura](https://github.com/mlevent/fatura) `(php)` paketinden faydalanılmıştır.
 
 [![ForTheBadge made-with-python](https://ForTheBadge.com/images/badges/made-with-python.svg)](https://www.python.org/)
 [![ForTheBadge built-with-love](https://ForTheBadge.com/images/badges/built-with-love.svg)](https://GitHub.com/keyiflerolsun/)
