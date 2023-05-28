@@ -23,6 +23,10 @@ class eArsivPortal:
         self.oturum   = legacy_session()
         self.komutlar = Komutlar()
 
+        self.oturum.headers.update({
+            "User-Agent" : "https://github.com/keyiflerolsun/eArsivPortal"
+        })
+
         self.__giris_yap(kullanici_kodu, sifre)
 
     def __istek_ayristir(self, istek:Response, veri:dict) -> dict | Exception:
