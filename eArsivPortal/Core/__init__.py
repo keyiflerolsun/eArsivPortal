@@ -34,10 +34,8 @@ class eArsivPortal:
 
     def __istek_ayristir(self, istek:Response, veri:dict) -> dict | Exception:
         if istek.status_code != 200 or veri.get("error"):
-            try:
-                hata_metni = veri["messages"][0]["text"]
-            except TypeError:
-                hata_metni = veri["messages"][0]
+            veri_mesaj = veri["messages"][0]
+            hata_metni = veri_mesaj["text"] if isinstance(veri_mesaj, dict) else veri_mesaj
 
             if "Oturum zamanaşımına uğradı" in hata_metni:
                 raise OturumSuresiDoldu(hata_metni)
