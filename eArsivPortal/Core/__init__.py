@@ -105,3 +105,5 @@ class eArsivPortal:
         )
 
         return "Faturanız başarıyla oluşturulmuştur." in veri.get("data")
+
+    # TODO: https://github.com/mlevent/fatura 'dan faydalanarak geri kalan fonksiyonlar yazılacaktır..
