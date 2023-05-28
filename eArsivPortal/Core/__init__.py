@@ -4,11 +4,8 @@ from ..Libs   import legacy_session, Komut, Komutlar, fatura_ver
 from requests import Response
 from json     import dumps
 from uuid     import uuid4
-
+from parsel   import Selector
 from .Hatalar import GirisYapilmadi, OturumSuresiDoldu, eArsivPortalHatasi
-
-from datetime import datetime
-from parsel import Selector
 
 class eArsivPortal:
     def __init__(self, kullanici_kodu:str="33333301", sifre:str="1", test_modu:bool=True):
