@@ -4,7 +4,7 @@
 [![Görüntülenme](https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https://github.com/keyiflerolsun/eArsivPortal&title=Görüntülenme)](#)
 <a href="https://KekikAkademi.org/Kahve" target="_blank"><img src="https://img.shields.io/badge/☕️-Kahve Ismarla-ffdd00" title="☕️ Kahve Ismarla" style="padding-left:5px;"></a>
 
-[![Fonksiyon Testleri ve PyPI Yükle](https://img.shields.io/github/actions/workflow/status/keyiflerolsun/eArsivPortal/test_ve_pypi.yml?label=PyPI%20Y%C3%BCkleyici&logo=github)](https://github.com/keyiflerolsun/eArsivPortal/actions/workflows/test_ve_pypi.yml)
+[![PyPI Yükleyici](https://img.shields.io/github/actions/workflow/status/keyiflerolsun/eArsivPortal/PyPI.yml?label=PyPI Yükleyici&logo=github)](https://github.com/keyiflerolsun/eArsivPortal/actions/workflows/PyPI.yml)
 
 [![PyPI](https://img.shields.io/pypi/v/eArsivPortal?logo=pypi&logoColor=white&label=PyPI)](https://pypi.org/project/eArsivPortal)
 [![PyPI - Yüklenme](https://img.shields.io/pypi/dm/eArsivPortal?logo=pypi&logoColor=white&label=Yüklenme)](https://pypi.org/project/eArsivPortal)
