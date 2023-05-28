@@ -16,7 +16,7 @@
 
 *GİB e-Arşiv Portal e-Fatura, e-SMM, e-Müstahsil Oluşturucu*
 
-> Bu paket [Fatih Kadir Akın](https://github.com/f)'ın hazırlamış olduğu [fatura](https://github.com/f/fatura) `(js)` paketinin Python dili ile yazılmış versiyonudur.
+> Bu paket [Fatih Kadir Akın](https://github.com/f)'ın hazırlamış olduğu [fatura](https://github.com/f/fatura) `(js)` paketinin `Python` dili ile yazılmış versiyonudur.
 
 > Gelişim aşamasında [Mert Levent](https://github.com/mlevent)'in hazırlamış olduğu [fatura](https://github.com/mlevent/fatura) `(php)` paketinden faydalanılmıştır.
 
