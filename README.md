@@ -21,6 +21,126 @@
 [![ForTheBadge made-with-python](https://ForTheBadge.com/images/badges/made-with-python.svg)](https://www.python.org/)
 [![ForTheBadge built-with-love](https://ForTheBadge.com/images/badges/built-with-love.svg)](https://GitHub.com/keyiflerolsun/)
 
+## 🚀 Kurulum
+
+### <a href="#"><img width="16" src="https://raw.githubusercontent.com/keyiflerolsun/eArsivPortal/main/.github/icons/pypi.svg"></a> PyPI
+
+```bash
+# Yüklemek
+pip install eArsivPortal
+
+# Güncellemek
+pip install -U eArsivPortal
+```
+
+## 📝 Kullanım
+
+### <a href="#"><img width="16" src="https://raw.githubusercontent.com/keyiflerolsun/eArsivPortal/main/.github/icons/python.svg"></a> Lib
+
+```python
+from eArsivPortal import eArsivPortal
+
+portal = eArsivPortal(
+    kullanici_kodu = "33333301",
+    sifre          = "1",
+    test_modu      = True
+)
+```
+
+```python
+portal.bilgilerim()
+#--------------------------------------------------------------#
+{
+    "vknTckn": "3333333301",
+    "unvan": "HOSAM ALDEEN ABUSHAWER TİCARİ GİRİŞİMİ",
+    "ad": "",
+    "soyad": "",
+    "cadde": "şehit yusuf bey",
+    "apartmanAdi": "yıldız",
+    "apartmanNo": "8",
+    "kapiNo": "2",
+    "kasaba": "ortakapı",
+    "ilce": "Merkez",
+    "il": "Kars",
+    "postaKodu": "36000",
+    "ulke": "Türkiye",
+    "telNo": "05524775288",
+    "faksNo": "",
+    "ePostaAdresi": "",
+    "webSitesiAdresi": "",
+    "vergiDairesi": "kars",
+    "sicilNo": "8729",
+    "isMerkezi": "",
+    "mersisNo": "9962438036000001"
+}
+```
+
+```python
+portal.kisi_getir(vkn_veya_tckn="3333333301")
+#--------------------------------------------------------------#
+{
+    "unvan":"HOSAM ALDEEN ABUSHAWER TİCARİ GİRİŞİMİ",
+    "adi":"",
+    "soyadi":"",
+    "vergiDairesi":"kars"
+}
+```
+
+```python
+portal.fatura_olustur(
+    tarih:str         = "07/10/1995",
+    saat:str          = "14:28:37",
+    vkn_veya_tckn:str = "11111111111",
+    ad:str            = "Ömer Faruk",
+    soyad:str         = "Sancak",
+    unvan:str         = "",
+    vergi_dairesi:str = "",
+    urun_adi:str      = "Python Yazılım Hizmeti",
+    fiyat:int | float = 100,
+    fatura_notu:str   = "— QNB Finansbank —\nTR70 0011 1000 0000 0118 5102 59\nÖmer Faruk Sancak"
+)
+#--------------------------------------------------------------#
+True
+```
+
+```python
+faturalar = portal.faturalari_getir(
+    baslangic_tarihi = "01/05/2023",
+    bitis_tarihi     = "28/05/2023"
+)
+#--------------------------------------------------------------#
+[
+    {
+        'belgeNumarasi': 'GIB2023000002672',
+        'aliciVknTckn': '16045751784',
+        'aliciUnvanAdSoyad': 'Sercan AYDIN',
+        'belgeTarihi': '28-05-2023',
+        'belgeTuru': 'FATURA',
+        'onayDurumu': 'Onaylanmadı',
+        'ettn': '0c111c74-fcd4-11ed-8026-3ae56703837b'
+    },
+    {
+        'belgeNumarasi': 'GIB2023000002673',
+        'aliciVknTckn': '16045751784',
+        'aliciUnvanAdSoyad': 'Sercan AYDIN',
+        'belgeTarihi': '28-05-2023',
+        'belgeTuru': 'FATURA',
+        'onayDurumu': 'Silinmiş',
+        'ettn': '234baa8e-fcd5-11ed-827f-3ae56703837b'
+    }
+]
+```
+
+```python
+html_fatura = portal.fatura_html(
+    ettn        = faturalar[0].get("ettn")
+    onay_durumu = faturalar[0].get("onayDurumu")
+)
+
+with open(f"{faturalar[0].get("aliciUnvanAdSoyad")}.html", "w", encoding="utf-8") as dosya:
+    dosya.write(html_fatura)
+```
+
 ## 🌐 Telif Hakkı ve Lisans
 
 * *Copyright (C) 2023 by* [keyiflerolsun](https://github.com/keyiflerolsun) ❤️️
