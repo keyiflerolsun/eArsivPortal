@@ -15,8 +15,8 @@ class eArsivPortal:
         self.test_modu      = test_modu
 
         apiler = {
-            "YAYIN" : "https://earsivportal.efatura.gov.tr",
-            "TEST"  : "https://earsivportaltest.efatura.gov.tr"
+            "YAYIN" : "https://earsivportal.efatura.gov.tr",     # * https://earsivportal.efatura.gov.tr/intragiris.html
+            "TEST"  : "https://earsivportaltest.efatura.gov.tr"  # * https://earsivportaltest.efatura.gov.tr/login.jsp
         }
 
         self.url      = apiler["TEST" if test_modu else "YAYIN"]
