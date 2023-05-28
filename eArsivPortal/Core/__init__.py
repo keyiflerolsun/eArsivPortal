@@ -7,6 +7,9 @@ from uuid     import uuid4
 
 from .Hatalar import GirisYapilmadi, OturumSuresiDoldu, eArsivPortalHatasi
 
+from datetime import datetime
+from parsel import Selector
+
 class eArsivPortal:
     def __init__(self, kullanici_kodu:str="33333301", sifre:str="1", test_modu:bool=True):
 
@@ -31,7 +34,11 @@ class eArsivPortal:
 
     def __istek_ayristir(self, istek:Response, veri:dict) -> dict | Exception:
         if istek.status_code != 200 or veri.get("error"):
-            hata_metni = veri["messages"][0]["text"]
+            try:
+                hata_metni = veri["messages"][0]["text"]
+            except Exception:
+                hata_metni = veri["error"]["messages"][0]
+
             if "Oturum zamanaşımına uğradı" in hata_metni:
                 raise OturumSuresiDoldu(hata_metni)
 
@@ -109,5 +116,39 @@ class eArsivPortal:
         )
 
         return "Faturanız başarıyla oluşturulmuştur." in veri.get("data")
+
+    def faturalari_getir(self, baslangic_tarihi:str="01/05/2023", bitis_tarihi:str="28/05/2023") -> list[dict]:
+        veri = self.__kod_calistir(
+            komut = self.komutlar.TASLAKLARI_GETIR,
+            jp    =     {
+                "baslangic" : baslangic_tarihi,
+                "bitis"     : bitis_tarihi,
+                "hangiTip"  :"5000/30000",
+                "table"     : []
+            }
+        )
+
+        return veri.get("data")
+
+    def fatura_html(self, ettn:str, onay_durumu:str) -> str:
+        veri = self.__kod_calistir(
+            komut = self.komutlar.FATURA_GOSTER,
+            jp    = {
+                "ettn"       : ettn,
+                "onayDurumu" : onay_durumu
+            }
+        )
+
+        secici = Selector(veri.get("data"))
+
+        for tr in secici.xpath("//tr"):
+            bos_tdler = tr.xpath(".//td[normalize-space(.)='\xa0']")
+
+            if len(bos_tdler) == len(tr.xpath(".//td")):
+                tr_element = tr.root
+                tr_element.getparent().remove(tr_element)
+
+        return secici.extract()
+
 
     # TODO: https://github.com/mlevent/fatura 'dan faydalanarak geri kalan fonksiyonlar yazılacaktır..
