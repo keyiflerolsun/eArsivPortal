@@ -26,10 +26,6 @@ jobs:
       - name: Python Sürümünü Göster
         run : python -c "import sys; print(sys.version)"
 
-      - name: Tesseract OCR Yükle
-        run : |
-          sudo apt-get update && sudo apt-get install tesseract-ocr
-
       - name: Pytest'i Yükle
         run : |
           python -m pip install --upgrade pip
