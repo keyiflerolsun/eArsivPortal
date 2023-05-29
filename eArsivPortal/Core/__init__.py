@@ -203,6 +203,11 @@ class eArsivPortal:
                 tr_element = tr.root
                 tr_element.getparent().remove(tr_element)
 
+        for td in secici.xpath("//td[@align='right' and @class='lineTableTd']"):
+            if td.xpath("string(.)").get().strip() in ["%0,00", "0,00 TL", "İskonto -"]:
+                td_element = td.root
+                td_element.text = ""
+
         return secici.extract()
 
     def __fatura_ver(self, faturalar) -> list[dict] | Exception:
