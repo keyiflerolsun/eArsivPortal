@@ -14,7 +14,7 @@
 [![Lisans](https://img.shields.io/pypi/l/eArsivPortal?logo=gnu&logoColor=white&label=Lisans)](#)
 [![Durum](https://img.shields.io/pypi/status/eArsivPortal?logo=windowsterminal&logoColor=white&label=Durum)](#)
 
-*GİB e-Arşiv Portal e-Fatura, e-SMM, e-Müstahsil Oluşturucu*
+*GİB e-Arşiv Portal e-Fatura Oluşturucu*
 
 > Bu paket [Fatih Kadir Akın](https://github.com/f)'ın hazırlamış olduğu [fatura](https://github.com/f/fatura) `(js)` paketinin `Python` dili ile yazılmış versiyonudur.
 
