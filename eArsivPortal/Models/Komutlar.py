@@ -7,20 +7,20 @@ class Komut(BaseModel):
     sayfa:str = Field(..., description="Sayfa Adı")
 
 class Komutlar(BaseModel):
+    KULLANICI_BILGILERI_GETIR:Komut      = Komut(
+        cmd   = "EARSIV_PORTAL_KULLANICI_BILGILERI_GETIR",
+        sayfa = "RG_KULLANICI"
+    )
+    MERNISTEN_BILGILERI_GETIR:Komut      = Komut(
+        cmd   = "SICIL_VEYA_MERNISTEN_BILGILERI_GETIR",
+        sayfa = "RG_BASITFATURA"
+    )
     FATURA_OLUSTUR:Komut                 = Komut(
         cmd   = "EARSIV_PORTAL_FATURA_OLUSTUR",
         sayfa = "RG_BASITFATURA"
     )
     TASLAKLARI_GETIR:Komut               = Komut(
         cmd   = "EARSIV_PORTAL_TASLAKLARI_GETIR",
-        sayfa = "RG_BASITTASLAKLAR"
-    )
-    ADIMA_KESILEN_BELGELERI_GETIR:Komut  = Komut(
-        cmd   = "EARSIV_PORTAL_ADIMA_KESILEN_BELGELERI_GETIR",
-        sayfa = "RG_ALICI_TASLAKLAR"
-    )
-    FATURA_HSM_CIHAZI_ILE_IMZALA:Komut   = Komut(
-        cmd   = "EARSIV_PORTAL_FATURA_HSM_CIHAZI_ILE_IMZALA",
         sayfa = "RG_BASITTASLAKLAR"
     )
     FATURA_GOSTER:Komut                  = Komut(
@@ -31,31 +31,15 @@ class Komutlar(BaseModel):
         cmd   = "EARSIV_PORTAL_FATURA_SIL",
         sayfa = "RG_BASITTASLAKLAR"
     )
-    MERNISTEN_BILGILERI_GETIR:Komut      = Komut(
-        cmd   = "SICIL_VEYA_MERNISTEN_BILGILERI_GETIR",
-        sayfa = "RG_BASITFATURA"
+    TELEFONNO_SORGULA:Komut                = Komut(
+        cmd   = "EARSIV_PORTAL_TELEFONNO_SORGULA",
+        sayfa = "RG_SMSONAY"
     )
     SMSSIFRE_GONDER:Komut                = Komut(
         cmd   = "EARSIV_PORTAL_SMSSIFRE_GONDER",
         sayfa = "RG_SMSONAY"
     )
     SMSSIFRE_DOGRULA:Komut               = Komut(
-        cmd   = "EARSIV_PORTAL_SMSSIFRE_DOGRULA",
+        cmd   = "0lhozfib5410mp",
         sayfa = "RG_SMSONAY"
-    )
-    KULLANICI_BILGILERI_GETIR:Komut      = Komut(
-        cmd   = "EARSIV_PORTAL_KULLANICI_BILGILERI_GETIR",
-        sayfa = "RG_KULLANICI"
-    )
-    KULLANICI_BILGILERI_KAYDET:Komut     = Komut(
-        cmd   = "EARSIV_PORTAL_KULLANICI_BILGILERI_KAYDET",
-        sayfa = "RG_KULLANICI"
-    )
-    MUSTAHSIL_OLUSTUR:Komut              = Komut(
-        cmd   = "EARSIV_PORTAL_MUSTAHSIL_OLUSTUR",
-        sayfa = "RG_MUSTAHSIL"
-    )
-    SERBEST_MESLEK_MAKBUZU_OLUSTUR:Komut = Komut(
-        cmd   = "EARSIV_PORTAL_SERBEST_MESLEK_MAKBUZU_OLUSTUR",
-        sayfa = "RG_SERBEST"
     )

@@ -100,7 +100,7 @@ portal.fatura_olustur(
     fatura_notu:str   = "— QNB Finansbank —\nTR70 0011 1000 0000 0118 5102 59\nÖmer Faruk Sancak"
 )
 #--------------------------------------------------------------#
-True
+{"ettn": "b40c16ae-8509-434e-bd6f-894459372134"}
 ```
 
 ```python
@@ -139,6 +139,24 @@ html_fatura = portal.fatura_html(
 
 with open(f"{faturalar[0].get("aliciUnvanAdSoyad")}.html", "w", encoding="utf-8") as dosya:
     dosya.write(html_fatura)
+```
+
+```python
+portal.fatura_sil(
+    faturalar = [faturalar[0], faturalar[1]]
+    aciklama  = "Fatura silindi."
+)
+#--------------------------------------------------------------#
+2 fatura başarıyla silindi.
+```
+
+```python
+oid = portal.gib_imza()
+portal.gib_sms_onay(faturalar[3], oid, input("SMS Doğrulama Kodu: "))
+```
+
+```python
+portal.cikis_yap()
 ```
 
 ## 🌐 Telif Hakkı ve Lisans

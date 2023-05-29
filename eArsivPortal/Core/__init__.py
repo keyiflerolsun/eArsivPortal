@@ -11,7 +11,7 @@ from datetime import datetime
 from pytz     import timezone
 
 class eArsivPortal:
-    def __init__(self, kullanici_kodu:str="33333301", sifre:str="1", test_modu:bool=True):
+    def __init__(self, kullanici_kodu:str="33333315", sifre:str="1", test_modu:bool=True):
 
         self.kullanici_kodu = kullanici_kodu
         self.sifre          = sifre
@@ -30,7 +30,8 @@ class eArsivPortal:
             "User-Agent" : "https://github.com/keyiflerolsun/eArsivPortal"
         })
 
-        self.__giris_yap(kullanici_kodu, sifre)
+        self.token = None
+        self.giris_yap()
 
     def __istek_ayristir(self, istek:Response, veri:dict) -> dict | Exception:
         if istek.status_code != 200 or veri.get("error"):
@@ -44,15 +45,15 @@ class eArsivPortal:
 
         return veri
 
-    def __giris_yap(self, kullanici_kodu:str, sifre:str) -> bool | eArsivPortalHatasi:
+    def giris_yap(self) -> bool | eArsivPortalHatasi:
         istek = self.oturum.post(
-            url     = f"{self.url}/earsiv-services/assos-login",
-            data    = {
+            url  = f"{self.url}/earsiv-services/assos-login",
+            data = {
                 "assoscmd" : "login" if self.test_modu else "anologin",
                 "rtype"    : "json",
-                "userid"   : kullanici_kodu,
-                "sifre"    : sifre,
-                "sifre2"   : sifre,
+                "userid"   : self.kullanici_kodu,
+                "sifre"    : self.sifre,
+                "sifre2"   : self.sifre,
                 "parola"   : "1"
             }
         )
@@ -60,14 +61,32 @@ class eArsivPortal:
         self.token = self.__istek_ayristir(istek, veri)["token"]
         return self.token is not None
 
+    def cikis_yap(self) -> bool | eArsivPortalHatasi:
+        if not self.token:
+            raise GirisYapilmadi("Giriş yapmadan çıkış yapamazsınız!")
+
+        istek = self.oturum.post(
+            url  = f"{self.url}/earsiv-services/assos-login",
+            data = {
+                "assoscmd" : "logout",
+                "rtype"    : "json",
+                "token"    : self.token
+            }
+        )
+        if istek.status_code != 200:
+            return False
+
+        self.token = None
+        return True
+
     def __kod_calistir(self, komut:Komut, jp:dict):
         if not self.token:
-            raise GirisYapilmadi("Giriş yapmadan fatura oluşturamazsınız!")
+            raise GirisYapilmadi("Giriş yapmadan işlem yapamazsınız!")
 
         try:
             istek = self.oturum.post(
-                url     = f"{self.url}/earsiv-services/dispatch",
-                data    = {
+                url  = f"{self.url}/earsiv-services/dispatch",
+                data = {
                     "cmd"      : komut.cmd,
                     "callid"   : f"{uuid4()}",
                     "pageName" : komut.sayfa,
@@ -83,22 +102,25 @@ class eArsivPortal:
             return self.__kod_calistir(komut, jp)
 
     def bilgilerim(self) -> dict:
-        veri = self.__kod_calistir(
+        istek = self.__kod_calistir(
             komut = self.komutlar.KULLANICI_BILGILERI_GETIR,
             jp    = {}
         )
 
-        return veri.get("data")
+        return istek.get("data")
 
-    def kisi_getir(self, vkn_veya_tckn:str):
-        veri = self.__kod_calistir(
-            komut = self.komutlar.MERNISTEN_BILGILERI_GETIR,
-            jp    = {
-                "vknTckn" : vkn_veya_tckn
-            }
-        )
+    def kisi_getir(self, vkn_veya_tckn:str) -> dict:
+        try:
+            istek = self.__kod_calistir(
+                komut = self.komutlar.MERNISTEN_BILGILERI_GETIR,
+                jp    = {
+                    "vknTckn" : vkn_veya_tckn
+                }
+            )
+        except Exception:
+            return {}
 
-        return veri.get("data")
+        return istek.get("data")
 
     def fatura_olustur(
         self,
@@ -112,42 +134,47 @@ class eArsivPortal:
         urun_adi:str      = "Python Yazılım Hizmeti",
         fiyat:int | float = 100,
         fatura_notu:str   = "— QNB Finansbank —\nTR70 0011 1000 0000 0118 5102 59\nÖmer Faruk Sancak"
-    ) -> bool:
+    ) -> dict[str, str | None]:
         kisi_bilgi = self.kisi_getir(vkn_veya_tckn)
 
-        veri = self.__kod_calistir(
-            komut = self.komutlar.FATURA_OLUSTUR,
-            jp    = fatura_ver(
-                tarih         = tarih or datetime.now(timezone("Turkey")).strftime("%d/%m/%Y"),
-                saat          = saat,
-                vkn_veya_tckn = vkn_veya_tckn,
-                ad            = kisi_bilgi.get("adi") or ad,
-                soyad         = kisi_bilgi.get("soyadi") or soyad,
-                unvan         = kisi_bilgi.get("unvan") or unvan,
-                vergi_dairesi = kisi_bilgi.get("vergiDairesi") or vergi_dairesi,
-                urun_adi      = urun_adi,
-                fiyat         = fiyat,
-                fatura_notu   = fatura_notu
-            )
+        fatura = fatura_ver(
+            tarih         = tarih or datetime.now(timezone("Turkey")).strftime("%d/%m/%Y"),
+            saat          = saat,
+            vkn_veya_tckn = vkn_veya_tckn,
+            ad            = kisi_bilgi.get("adi") or ad,
+            soyad         = kisi_bilgi.get("soyadi") or soyad,
+            unvan         = kisi_bilgi.get("unvan") or unvan,
+            vergi_dairesi = kisi_bilgi.get("vergiDairesi") or vergi_dairesi,
+            urun_adi      = urun_adi,
+            fiyat         = fiyat,
+            fatura_notu   = fatura_notu
         )
 
-        return "Faturanız başarıyla oluşturulmuştur." in veri.get("data")
+        istek = self.__kod_calistir(
+            komut = self.komutlar.FATURA_OLUSTUR,
+            jp    = fatura
+        )
+
+        if "Faturanız başarıyla oluşturulmuştur." in istek.get("data"):
+            return {"ettn": fatura.get("faturaUuid")}
+
+        return {"ettn": None}
 
     def faturalari_getir(self, baslangic_tarihi:str="01/05/2023", bitis_tarihi:str="28/05/2023") -> list[dict]:
-        veri = self.__kod_calistir(
+        istek = self.__kod_calistir(
             komut = self.komutlar.TASLAKLARI_GETIR,
-            jp    =     {
-                "baslangic" : baslangic_tarihi,
+            jp    = {
+                "baslangic" : baslangic_tarihi or datetime.now(timezone("Turkey")).strftime("%d/%m/%Y"),
                 "bitis"     : bitis_tarihi or datetime.now(timezone("Turkey")).strftime("%d/%m/%Y"),
                 "hangiTip"  :"5000/30000",
                 "table"     : []
             }
         )
 
-        return veri.get("data")
+        return istek.get("data")
 
     def fatura_html(self, ettn:str, onay_durumu:str) -> str:
-        veri = self.__kod_calistir(
+        istek = self.__kod_calistir(
             komut = self.komutlar.FATURA_GOSTER,
             jp    = {
                 "ettn"       : ettn,
@@ -155,7 +182,7 @@ class eArsivPortal:
             }
         )
 
-        secici = Selector(veri.get("data"))
+        secici = Selector(istek.get("data"))
 
         for tr in secici.xpath("//tr"):
             bos_tdler = tr.xpath(".//td[normalize-space(.)='\xa0']")
@@ -166,5 +193,49 @@ class eArsivPortal:
 
         return secici.extract()
 
+    def fatura_sil(self, faturalar:list[dict] | dict, aciklama:str):
+        istek = self.__kod_calistir(
+            komut = self.komutlar.FATURA_SIL,
+            jp    = {
+                "silinecekler" : [faturalar] if isinstance(faturalar, dict) else faturalar,
+                "aciklama"     : aciklama
+            }
+        )
+
+        return istek.get("data")
+
+    def gib_imza(self) -> dict[str, str | None]:
+        telefon_istek = self.__kod_calistir(
+            komut = self.komutlar.TELEFONNO_SORGULA,
+            jp    = {}
+        )
+        telefon_veri = telefon_istek.get("data")
+        telefon_no   = telefon_veri.get("telefon")
+        if not telefon_no:
+            return {"oid": None}
+
+        sms_gonder = self.__kod_calistir(
+            komut = self.komutlar.SMSSIFRE_GONDER,
+            jp    = {
+                "CEPTEL"  : telefon_no,
+                "KCEPTEL" : False,
+                "TIP"     : ""
+            }
+        )
+
+        return sms_gonder.get("data")
+
+    def gib_sms_onay(self, faturalar:list[dict] | dict, oid:str, sifre:str):
+        istek = self.__kod_calistir(
+            komut = self.komutlar.SMSSIFRE_DOGRULA,
+            jp    = {
+                "SIFRE" : sifre,
+                "OID"   : oid,
+                "OPR"   : 1,
+                "DATA"  : [faturalar] if isinstance(faturalar, dict) else faturalar,
+            }
+        )
+
+        return istek.get("data")
 
     # TODO: https://github.com/mlevent/fatura 'dan faydalanarak geri kalan fonksiyonlar yazılacaktır..
