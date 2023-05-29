@@ -236,7 +236,7 @@ class eArsivPortal:
 
         return self.__nesne_ver("FaturaSil", {"mesaj": istek.get("data")})
 
-    def gib_imza(self) -> BaseModel:
+    def __gib_imza(self) -> BaseModel:
         telefon_istek = self.__kod_calistir(
             komut = self.komutlar.TELEFONNO_SORGULA,
             jp    = {}
@@ -254,15 +254,16 @@ class eArsivPortal:
                 "TIP"     : ""
             }
         )
+        print(f"`{telefon_no}` numarasına SMS gönderildi.")
 
         return self.__nesne_ver("GibImza", sms_gonder.get("data"))
 
-    def gib_sms_onay(self, faturalar:list[dict] | dict, oid:str, sifre:str) -> BaseModel:
+    def gib_sms_onay(self, faturalar:list[dict] | dict, sifre:str) -> BaseModel:
         istek = self.__kod_calistir(
             komut = self.komutlar.SMSSIFRE_DOGRULA,
             jp    = {
                 "SIFRE" : sifre,
-                "OID"   : oid,
+                "OID"   : self.__gib_imza().oid,
                 "OPR"   : 1,
                 "DATA"  : self.__fatura_ver(faturalar),
             }

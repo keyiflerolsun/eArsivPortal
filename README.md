@@ -92,16 +92,16 @@ Kisi(
 
 ```python
 portal.fatura_olustur(
-    tarih:str         = "07/10/1995",
-    saat:str          = "14:28:37",
-    vkn_veya_tckn:str = "11111111111",
-    ad:str            = "Ömer Faruk",
-    soyad:str         = "Sancak",
-    unvan:str         = "",
-    vergi_dairesi:str = "",
-    urun_adi:str      = "Python Yazılım Hizmeti",
-    fiyat:int | float = 100,
-    fatura_notu:str   = "— QNB Finansbank —\nTR70 0011 1000 0000 0118 5102 59\nÖmer Faruk Sancak"
+    tarih         = "07/10/1995",
+    saat          = "14:28:37",
+    vkn_veya_tckn = "11111111111",
+    ad            = "Ömer Faruk",
+    soyad         = "Sancak",
+    unvan         = "",
+    vergi_dairesi = "",
+    urun_adi      = "Python Yazılım Hizmeti",
+    fiyat         = 100,
+    fatura_notu   = "— QNB Finansbank —\nTR70 0011 1000 0000 0118 5102 59\nÖmer Faruk Sancak"
 )
 
 #--------------------------------------------------------------#
@@ -170,8 +170,7 @@ FaturaSil(mesaj='2 fatura başarıyla silindi.')
 ```
 
 ```python
-imza = portal.gib_imza()
-portal.gib_sms_onay(faturalar[3], imza.oid, input("SMS Doğrulama Kodu: "))
+portal.gib_sms_onay(faturalar[3], input("SMS Doğrulama Kodu: "))
 
 #--------------------------------------------------------------#
 
