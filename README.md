@@ -49,41 +49,45 @@ portal = eArsivPortal(
 
 ```python
 portal.bilgilerim()
+
 #--------------------------------------------------------------#
-{
-    "vknTckn": "3333333301",
-    "unvan": "HOSAM ALDEEN ABUSHAWER TİCARİ GİRİŞİMİ",
-    "ad": "",
-    "soyad": "",
-    "cadde": "şehit yusuf bey",
-    "apartmanAdi": "yıldız",
-    "apartmanNo": "8",
-    "kapiNo": "2",
-    "kasaba": "ortakapı",
-    "ilce": "Merkez",
-    "il": "Kars",
-    "postaKodu": "36000",
-    "ulke": "Türkiye",
-    "telNo": "05524775288",
-    "faksNo": "",
-    "ePostaAdresi": "",
-    "webSitesiAdresi": "",
-    "vergiDairesi": "kars",
-    "sicilNo": "8729",
-    "isMerkezi": "",
-    "mersisNo": "9962438036000001"
-}
+
+Bilgilerim(
+    vknTckn='3333333315',
+    unvan='XYZ Yaz',
+    ad='',
+    soyad='',
+    cadde='Sahil yolu',
+    apartmanAdi='Dali çıtır pide',
+    apartmanNo='12',
+    kapiNo='3',
+    kasaba='adana',
+    ilce='GEMLİK',
+    il='Antalya',
+    postaKodu='16000',
+    ulke='Türkiye',
+    telNo='053982456665',
+    faksNo='',
+    ePostaAdresi='info@vekamp.com',
+    webSitesiAdresi='',
+    vergiDairesi='orhangazi vergi dairesi',
+    sicilNo='00000000000000',
+    isMerkezi='',
+    mersisNo=''
+)
 ```
 
 ```python
 portal.kisi_getir(vkn_veya_tckn="3333333301")
+
 #--------------------------------------------------------------#
-{
-    "unvan":"HOSAM ALDEEN ABUSHAWER TİCARİ GİRİŞİMİ",
-    "adi":"",
-    "soyadi":"",
-    "vergiDairesi":"kars"
-}
+
+Kisi(
+    unvan='XYZ Yaz',
+    adi='',
+    soyadi='',
+    vergiDairesi='orhangazi vergi dairesi'
+)
 ```
 
 ```python
@@ -99,8 +103,10 @@ portal.fatura_olustur(
     fiyat:int | float = 100,
     fatura_notu:str   = "— QNB Finansbank —\nTR70 0011 1000 0000 0118 5102 59\nÖmer Faruk Sancak"
 )
+
 #--------------------------------------------------------------#
-{"ettn": "b40c16ae-8509-434e-bd6f-894459372134"}
+
+FaturaOlustur(ettn='8cb401e3-ca6d-442a-8389-894459372134')
 ```
 
 ```python
@@ -108,36 +114,47 @@ faturalar = portal.faturalari_getir(
     baslangic_tarihi = "01/05/2023",
     bitis_tarihi     = "28/05/2023"
 )
+
 #--------------------------------------------------------------#
+
 [
-    {
-        'belgeNumarasi': 'GIB2023000002672',
-        'aliciVknTckn': '16045751784',
-        'aliciUnvanAdSoyad': 'Sercan AYDIN',
-        'belgeTarihi': '28-05-2023',
-        'belgeTuru': 'FATURA',
-        'onayDurumu': 'Onaylanmadı',
-        'ettn': '0c111c74-fcd4-11ed-8026-3ae56703837b'
-    },
-    {
-        'belgeNumarasi': 'GIB2023000002673',
-        'aliciVknTckn': '16045751784',
-        'aliciUnvanAdSoyad': 'Sercan AYDIN',
-        'belgeTarihi': '28-05-2023',
-        'belgeTuru': 'FATURA',
-        'onayDurumu': 'Silinmiş',
-        'ettn': '234baa8e-fcd5-11ed-827f-3ae56703837b'
-    }
+    Fatura(
+        belgeNumarasi='GIB2023000002672',
+        aliciVknTckn='16045751784',
+        aliciUnvanAdSoyad='Sercan AYDIN',
+        belgeTarihi='29-05-2023',
+        belgeTuru='FATURA',
+        onayDurumu='Silinmiş',
+        ettn='7386c1dc-8a23-4d46-9c8d-de3512b630b4'
+    ),
+    Fatura(
+        belgeNumarasi='GIB2023000001918',
+        aliciVknTckn='16045751784',
+        aliciUnvanAdSoyad='Sercan AYDIN',
+        belgeTarihi='29-05-2023',
+        belgeTuru='FATURA',
+        onayDurumu='Onaylanmadı',
+        ettn='2ef98bfa-8787-4429-a1fa-a0514560e7eb'
+    ),
+    Fatura(
+        belgeNumarasi='GIB2023000001919',
+        aliciVknTckn='16045751784',
+        aliciUnvanAdSoyad='Sercan AYDIN',
+        belgeTarihi='29-05-2023',
+        belgeTuru='FATURA',
+        onayDurumu='Onaylandı',
+        ettn='8cb401e3-ca6d-442a-8389-c4d87c9eb67c'
+    )
 ]
 ```
 
 ```python
 html_fatura = portal.fatura_html(
-    ettn        = faturalar[0].get("ettn")
-    onay_durumu = faturalar[0].get("onayDurumu")
+    ettn        = faturalar[0].ettn
+    onay_durumu = faturalar[0].onayDurumu
 )
 
-with open(f"{faturalar[0].get("aliciUnvanAdSoyad")}.html", "w", encoding="utf-8") as dosya:
+with open(f"{faturalar[0].aliciUnvanAdSoyad}.html", "w", encoding="utf-8") as dosya:
     dosya.write(html_fatura)
 ```
 
@@ -146,13 +163,19 @@ portal.fatura_sil(
     faturalar = [faturalar[0], faturalar[1]]
     aciklama  = "Fatura silindi."
 )
+
 #--------------------------------------------------------------#
-2 fatura başarıyla silindi.
+
+FaturaSil(mesaj='2 fatura başarıyla silindi.')
 ```
 
 ```python
-oid = portal.gib_imza()
-portal.gib_sms_onay(faturalar[3], oid, input("SMS Doğrulama Kodu: "))
+imza = portal.gib_imza()
+portal.gib_sms_onay(faturalar[3], imza.oid, input("SMS Doğrulama Kodu: "))
+
+#--------------------------------------------------------------#
+
+GibSMSOnay(mesaj='SMS şifreniz doğrulandı, işlem başarılı.')
 ```
 
 ```python

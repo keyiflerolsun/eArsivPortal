@@ -1,6 +1,7 @@
 # Bu araç @keyiflerolsun tarafından | @KekikAkademi için yazılmıştır.
 
 from eArsivPortal import eArsivPortal
+from pydantic     import BaseModel
 
 def test_bilgilerim():
     portal     = eArsivPortal()
@@ -8,7 +9,7 @@ def test_bilgilerim():
 
     portal.cikis_yap()
 
-    assert isinstance(bilgilerim, dict)
+    assert isinstance(bilgilerim, BaseModel)
 
 def test_fatura_olustur():
     portal = eArsivPortal()
@@ -27,7 +28,7 @@ def test_fatura_olustur():
 
     portal.cikis_yap()
 
-    assert isinstance(fatura.get("ettn"), str)
+    assert isinstance(fatura.ettn, str)
 
 def test_fatura_sorgu():
     portal     = eArsivPortal()
@@ -39,4 +40,4 @@ def test_fatura_sorgu():
 
     portal.cikis_yap()
 
-    assert isinstance(faturalar[0], dict)
+    assert isinstance(faturalar[0], BaseModel)

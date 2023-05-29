@@ -10,6 +10,8 @@ from .Hatalar import GirisYapilmadi, OturumSuresiDoldu, eArsivPortalHatasi
 from datetime import datetime
 from pytz     import timezone
 
+from pydantic import create_model, BaseModel
+
 class eArsivPortal:
     def __init__(self, kullanici_kodu:str="33333315", sifre:str="1", test_modu:bool=True):
 
@@ -33,7 +35,12 @@ class eArsivPortal:
         self.token = None
         self.giris_yap()
 
-    def __istek_ayristir(self, istek:Response, veri:dict) -> dict | Exception:
+    def __nesne_ver(self, isim, veri) -> BaseModel:
+        __nesne = create_model(isim, **veri)
+
+        return __nesne(**veri)
+
+    def __istek_ayristir(self, istek:Response, veri:dict) -> dict | str | Exception:
         if istek.status_code != 200 or veri.get("error"):
             veri_mesaj = veri["messages"][0]
             hata_metni = veri_mesaj["text"] if isinstance(veri_mesaj, dict) else veri_mesaj
@@ -101,26 +108,28 @@ class eArsivPortal:
             self.__giris_yap(self.kullanici_kodu, self.sifre)
             return self.__kod_calistir(komut, jp)
 
-    def bilgilerim(self) -> dict:
+    def bilgilerim(self) -> BaseModel:
         istek = self.__kod_calistir(
             komut = self.komutlar.KULLANICI_BILGILERI_GETIR,
             jp    = {}
         )
+        veri  = istek.get("data")
 
-        return istek.get("data")
+        return self.__nesne_ver("Bilgilerim", veri)
 
-    def kisi_getir(self, vkn_veya_tckn:str) -> dict:
+    def kisi_getir(self, vkn_veya_tckn:str) -> BaseModel:
         try:
             istek = self.__kod_calistir(
                 komut = self.komutlar.MERNISTEN_BILGILERI_GETIR,
                 jp    = {
-                    "vknTckn" : vkn_veya_tckn
+                    "vknTcknn" : vkn_veya_tckn
                 }
             )
+            veri  = istek.get("data")
         except Exception:
-            return {}
+            veri  = {"unvan": None, "adi": None, "soyadi": None, "vergiDairesi": None}
 
-        return istek.get("data")
+        return self.__nesne_ver("Kisi", veri)
 
     def fatura_olustur(
         self,
@@ -134,17 +143,17 @@ class eArsivPortal:
         urun_adi:str      = "Python Yazılım Hizmeti",
         fiyat:int | float = 100,
         fatura_notu:str   = "— QNB Finansbank —\nTR70 0011 1000 0000 0118 5102 59\nÖmer Faruk Sancak"
-    ) -> dict[str, str | None]:
+    ) -> BaseModel:
         kisi_bilgi = self.kisi_getir(vkn_veya_tckn)
 
         fatura = fatura_ver(
             tarih         = tarih or datetime.now(timezone("Turkey")).strftime("%d/%m/%Y"),
             saat          = saat,
             vkn_veya_tckn = vkn_veya_tckn,
-            ad            = kisi_bilgi.get("adi") or ad,
-            soyad         = kisi_bilgi.get("soyadi") or soyad,
-            unvan         = kisi_bilgi.get("unvan") or unvan,
-            vergi_dairesi = kisi_bilgi.get("vergiDairesi") or vergi_dairesi,
+            ad            = kisi_bilgi.adi or ad,
+            soyad         = kisi_bilgi.soyadi or soyad,
+            unvan         = kisi_bilgi.unvan or unvan,
+            vergi_dairesi = kisi_bilgi.vergiDairesi or vergi_dairesi,
             urun_adi      = urun_adi,
             fiyat         = fiyat,
             fatura_notu   = fatura_notu
@@ -155,12 +164,13 @@ class eArsivPortal:
             jp    = fatura
         )
 
+        ettn = None
         if "Faturanız başarıyla oluşturulmuştur." in istek.get("data"):
-            return {"ettn": fatura.get("faturaUuid")}
+            ettn = fatura.get("faturaUuid")
 
-        return {"ettn": None}
+        return self.__nesne_ver("FaturaOlustur", {"ettn": ettn})
 
-    def faturalari_getir(self, baslangic_tarihi:str="01/05/2023", bitis_tarihi:str="28/05/2023") -> list[dict]:
+    def faturalari_getir(self, baslangic_tarihi:str="01/05/2023", bitis_tarihi:str="28/05/2023") -> list[BaseModel]:
         istek = self.__kod_calistir(
             komut = self.komutlar.TASLAKLARI_GETIR,
             jp    = {
@@ -170,8 +180,9 @@ class eArsivPortal:
                 "table"     : []
             }
         )
+        veri  = istek.get("data")
 
-        return istek.get("data")
+        return [self.__nesne_ver("Fatura", fatura) for fatura in veri]
 
     def fatura_html(self, ettn:str, onay_durumu:str) -> str:
         istek = self.__kod_calistir(
@@ -181,8 +192,9 @@ class eArsivPortal:
                 "onayDurumu" : onay_durumu
             }
         )
+        veri  = istek.get("data")
 
-        secici = Selector(istek.get("data"))
+        secici = Selector(veri)
 
         for tr in secici.xpath("//tr"):
             bos_tdler = tr.xpath(".//td[normalize-space(.)='\xa0']")
@@ -193,18 +205,33 @@ class eArsivPortal:
 
         return secici.extract()
 
-    def fatura_sil(self, faturalar:list[dict] | dict, aciklama:str):
+    def __fatura_ver(self, faturalar) -> list[dict] | Exception:
+        if not isinstance(faturalar, list):
+            faturalar = [faturalar]
+
+        payload = []
+        for fatura in faturalar:
+            if isinstance(fatura, dict):
+                payload.append(fatura)
+            elif isinstance(fatura, list):
+                payload.extend(fatura)
+            else:
+                payload.append(fatura.dict())
+
+        return payload
+
+    def fatura_sil(self, faturalar:list[dict] | dict, aciklama:str) -> BaseModel:
         istek = self.__kod_calistir(
             komut = self.komutlar.FATURA_SIL,
             jp    = {
-                "silinecekler" : [faturalar] if isinstance(faturalar, dict) else faturalar,
+                "silinecekler" : self.__fatura_ver(faturalar),
                 "aciklama"     : aciklama
             }
         )
 
-        return istek.get("data")
+        return self.__nesne_ver("FaturaSil", {"mesaj": istek.get("data")})
 
-    def gib_imza(self) -> dict[str, str | None]:
+    def gib_imza(self) -> BaseModel:
         telefon_istek = self.__kod_calistir(
             komut = self.komutlar.TELEFONNO_SORGULA,
             jp    = {}
@@ -212,7 +239,7 @@ class eArsivPortal:
         telefon_veri = telefon_istek.get("data")
         telefon_no   = telefon_veri.get("telefon")
         if not telefon_no:
-            return {"oid": None}
+            return self.__nesne_ver("GibImza", {"oid": None})
 
         sms_gonder = self.__kod_calistir(
             komut = self.komutlar.SMSSIFRE_GONDER,
@@ -223,19 +250,20 @@ class eArsivPortal:
             }
         )
 
-        return sms_gonder.get("data")
+        return self.__nesne_ver("GibImza", sms_gonder.get("data"))
 
-    def gib_sms_onay(self, faturalar:list[dict] | dict, oid:str, sifre:str):
+    def gib_sms_onay(self, faturalar:list[dict] | dict, oid:str, sifre:str) -> BaseModel:
         istek = self.__kod_calistir(
             komut = self.komutlar.SMSSIFRE_DOGRULA,
             jp    = {
                 "SIFRE" : sifre,
                 "OID"   : oid,
                 "OPR"   : 1,
-                "DATA"  : [faturalar] if isinstance(faturalar, dict) else faturalar,
+                "DATA"  : self.__fatura_ver(faturalar),
             }
         )
+        veri  = istek.get("data")
 
-        return istek.get("data")
+        return self.__nesne_ver("GibSMSOnay", {"mesaj": veri.get("msg")})
 
     # TODO: https://github.com/mlevent/fatura 'dan faydalanarak geri kalan fonksiyonlar yazılacaktır..
