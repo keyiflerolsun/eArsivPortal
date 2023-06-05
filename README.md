@@ -170,7 +170,12 @@ FaturaSil(mesaj='2 fatura başarıyla silindi.')
 ```
 
 ```python
-portal.gib_sms_onay(faturalar[3], input("SMS Doğrulama Kodu: "))
+imza = portal.gib_imza()
+portal.gib_sms_onay(
+    faturalar = faturalar[3],
+    oid       = imza.oid,
+    sifre     = input("SMS Doğrulama Kodu: ")
+)
 
 #--------------------------------------------------------------#
 
