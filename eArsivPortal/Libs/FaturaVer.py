@@ -14,7 +14,8 @@ def fatura_ver(
     fiyat:int | float = 100,
     fatura_notu:str   = "— QNB Finansbank —\nTR70 0011 1000 0000 0118 5102 59\nÖmer Faruk Sancak"
 ):
-    matrah = fiyat / 1.18
+    # matrah = fiyat / 1.18     # ! %18
+    matrah = fiyat / 1.20       # ! %20
     kdv    = fiyat - matrah
     return {
         "faturaUuid"        : f"{uuid4()}",
