@@ -36,7 +36,7 @@ jobs:
         env :
           TWINE_USERNAME: __token__
           TWINE_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
-          CIBW_BUILD: cp38-* cp39-* cp310-* cp311-*
+          CIBW_BUILD: cp310-* cp311-*
         run : |
           python -m build --sdist
           python -m cibuildwheel --output-dir dist;
