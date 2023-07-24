@@ -30,14 +30,16 @@ jobs:
       - name: Gereksinimleri Yükle
         run : |
           python -m pip install --upgrade pip
-          pip install -U setuptools wheel build twine
+          pip install -U setuptools wheel build twine cibuildwheel
 
       - name: Kütüphaneyi PyPI'ye Yükle
         env :
           TWINE_USERNAME: __token__
           TWINE_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
+          CIBW_BUILD: cp38-* cp39-* cp310-* cp311-*
         run : |
-          python -m build --sdist --wheel
+          python -m build --sdist
+          python -m cibuildwheel --output-dir dist;
           twine check dist/*
           python -m twine upload dist/*
           rm -rf build/ dist/ *.egg-info/
