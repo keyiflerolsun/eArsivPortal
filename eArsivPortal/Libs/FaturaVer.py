@@ -59,7 +59,7 @@ def fatura_ver(
                 "iskontoTutari"                 : "0",
                 "iskontoNedeni"                 : "",
                 "malHizmetTutari"               : f"{round(matrah, 2)}",
-                "kdvOrani"                      : "18",
+                "kdvOrani"                      : "20",
                 "vergiOrani"                    : 0,
                 "kdvTutari"                     : f"{round(kdv, 2)}",
                 "vergininKdvTutari"             : "0",
