@@ -1,7 +1,7 @@
 # Bu araç @keyiflerolsun tarafından | @KekikAkademi için yazılmıştır.
 
 from eArsivPortal import eArsivPortal
-from pydantic     import BaseModel
+from pydantic.v1  import BaseModel
 
 def test_bilgilerim():
     portal     = eArsivPortal()

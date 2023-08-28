@@ -1,6 +1,6 @@
 # Bu araç @keyiflerolsun tarafından | @KekikAkademi için yazılmıştır.
 
-from pydantic import BaseModel, Field
+from pydantic.v1 import BaseModel, Field
 
 class Komut(BaseModel):
     cmd:str   = Field(..., description="Komut Adı")
