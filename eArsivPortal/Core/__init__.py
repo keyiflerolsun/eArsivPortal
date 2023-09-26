@@ -159,14 +159,18 @@ class eArsivPortal:
             fatura_notu   = fatura_notu
         )
 
-        istek = self.__kod_calistir(
-            komut = self.komutlar.FATURA_OLUSTUR,
-            jp    = fatura
-        )
+        while True:
+            istek = self.__kod_calistir(
+                komut = self.komutlar.FATURA_OLUSTUR,
+                jp    = fatura
+            )
 
-        ettn = None
-        if "Faturanız başarıyla oluşturulmuştur." in istek.get("data"):
-            ettn = fatura.get("faturaUuid")
+            ettn = None
+            if "Faturanız başarıyla oluşturulmuştur." in istek.get("data"):
+                ettn = fatura.get("faturaUuid")
+                break
+
+            print(f"{fatura.get('aliciAdi')} {fatura.get('aliciSoyadi')} | {istek.get('data')} | Yeniden Deneniyor..")
 
         return self.__nesne_ver("FaturaOlustur", {"ettn": ettn})
 
