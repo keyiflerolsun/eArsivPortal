@@ -43,3 +43,7 @@ class Komutlar(BaseModel):
         cmd   = "0lhozfib5410mp",
         sayfa = "RG_SMSONAY"
     )
+    ADIMA_KESILEN_BELGELERI_GETIR:Komut  = Komut(
+        cmd   = "EARSIV_PORTAL_ADIMA_KESILEN_BELGELERI_GETIR",
+        sayfa = "RG_ALICI_TASLAKLAR"
+    )

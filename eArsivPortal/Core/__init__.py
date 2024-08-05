@@ -276,4 +276,18 @@ class eArsivPortal:
 
         return self.__nesne_ver("GibSMSOnay", {"mesaj": veri.get("msg")})
 
+    def satınalma_faturalari_getir(self, baslangic_tarihi:str="01/05/2023", bitis_tarihi:str="28/05/2023", hourlySearch:str="NONE") -> list[BaseModel]:
+        istek = self.__kod_calistir(
+            komut = self.komutlar.ADIMA_KESILEN_BELGELERI_GETIR,
+            jp    = {
+                "baslangic"            : baslangic_tarihi or datetime.now(timezone("Turkey")).strftime("%d/%m/%Y"),
+                "bitis"                : bitis_tarihi or datetime.now(timezone("Turkey")).strftime("%d/%m/%Y"),
+                "hourlySearchInterval" : hourlySearch,
+                "table"                : []
+            }
+        )
+        veri  = istek.get("data")
+
+        return [self.__nesne_ver("Fatura", fatura) for fatura in veri]
+
     # TODO: https://github.com/mlevent/fatura 'dan faydalanarak geri kalan fonksiyonlar yazılacaktır..

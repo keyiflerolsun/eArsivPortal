@@ -6,7 +6,7 @@ from io         import open
 setup(
     # ? Genel Bilgiler
     name         = "eArsivPortal",
-    version      = "1.0.8",
+    version      = "1.0.9",
     url          = "https://github.com/keyiflerolsun/eArsivPortal",
     description  = "GİB e-Arşiv Portal e-Fatura Oluşturucu",
     keywords     = ["eArsivPortal", "KekikAkademi", "keyiflerolsun"],
