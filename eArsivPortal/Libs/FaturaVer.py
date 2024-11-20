@@ -1,10 +1,12 @@
 # Bu araç @keyiflerolsun tarafından | @KekikAkademi için yazılmıştır.
 
 from uuid import uuid4
+from KurGetir import kurGetir
 
 def fatura_ver(
     tarih:str         = "07/10/1995",
     saat:str          = "14:28:37",
+    para_birimi:str   = "TRY",
     vkn_veya_tckn:str = "11111111111",
     ad:str            = "Ömer Faruk",
     soyad:str         = "Sancak",
@@ -17,13 +19,14 @@ def fatura_ver(
     # matrah = fiyat / 1.18     # ! %18
     matrah = fiyat / 1.20       # ! %20
     kdv    = fiyat - matrah
+    doviz  = "0" if para_birimi == "TRY" else kurGetir(para_birimi)
     return {
         "faturaUuid"        : f"{uuid4()}",
         "belgeNumarasi"     : "",
         "faturaTarihi"      : tarih,
         "saat"              : saat,
-        "paraBirimi"        : "TRY",
-        "dovzTLkur"         : "0",
+        "paraBirimi"        : para_birimi,
+        "dovzTLkur"         : doviz,
         "faturaTipi"        : "SATIS",
         "hangiTip"          : "5000/30000",
         "vknTckn"           : vkn_veya_tckn,

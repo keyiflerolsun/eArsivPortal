@@ -31,7 +31,8 @@ setup(
         "requests",
         "pydantic",
         "parsel",
-        "cssselect"
+        "cssselect",
+        "xmltodict"
     ],
 
     # ? PyPI Bilgileri

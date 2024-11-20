@@ -135,6 +135,7 @@ class eArsivPortal:
         self,
         tarih:str         = "07/10/1995",
         saat:str          = "14:28:37",
+        para_birimi:str   = "TRY",
         vkn_veya_tckn:str = "11111111111",
         ad:str            = "Ömer Faruk",
         soyad:str         = "Sancak",
@@ -149,6 +150,7 @@ class eArsivPortal:
         fatura = fatura_ver(
             tarih         = tarih or datetime.now(timezone("Turkey")).strftime("%d/%m/%Y"),
             saat          = saat,
+            para_birimi   = para_birimi,
             vkn_veya_tckn = vkn_veya_tckn,
             ad            = kisi_bilgi.adi or ad,
             soyad         = kisi_bilgi.soyadi or soyad,
