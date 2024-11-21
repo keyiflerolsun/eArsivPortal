@@ -16,6 +16,7 @@ def test_fatura_olustur():
     fatura = portal.fatura_olustur(
         tarih         = "29/05/2023",
         saat          = "14:28:37",
+        para_birimi   = "USD",
         vkn_veya_tckn = "11111111111",
         ad            = "Ömer Faruk",
         soyad         = "Sancak",
