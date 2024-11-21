@@ -1,7 +1,7 @@
 # Bu araç @keyiflerolsun tarafından | @KekikAkademi için yazılmıştır.
 
-from uuid import uuid4
-from KurGetir import kurGetir
+from uuid      import uuid4
+from .KurGetir import kurGetir
 
 def fatura_ver(
     tarih:str         = "07/10/1995",
