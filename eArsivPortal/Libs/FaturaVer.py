@@ -1,6 +1,5 @@
 # Bu araç @keyiflerolsun tarafından | @KekikAkademi için yazılmıştır.
 
-from uuid      import uuid4
 from .KurGetir import kurGetir
 
 def fatura_ver(
@@ -21,7 +20,7 @@ def fatura_ver(
     kdv    = fiyat - matrah
     doviz  = "0" if para_birimi == "TRY" else kurGetir(para_birimi)
     return {
-        "faturaUuid"        : f"{uuid4()}",
+        "faturaUuid"        : "",
         "belgeNumarasi"     : "",
         "faturaTarihi"      : tarih,
         "saat"              : saat,
