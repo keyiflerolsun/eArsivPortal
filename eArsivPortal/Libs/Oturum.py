@@ -9,8 +9,8 @@ class CustomHttpAdapter(requests.adapters.HTTPAdapter):
 
     def init_poolmanager(self, connections, maxsize, block=False):
         self.poolmanager = urllib3.poolmanager.PoolManager(
-            num_pools=connections, maxsize=maxsize,
-            block=block, ssl_context=self.ssl_context
+            num_pools = connections, maxsize=maxsize,
+            block     = block, ssl_context=self.ssl_context
         )
 
 def legacy_session():

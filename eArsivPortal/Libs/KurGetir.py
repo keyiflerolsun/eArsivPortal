@@ -1,3 +1,5 @@
+# Bu araç @keyiflerolsun tarafından | @KekikAkademi için yazılmıştır.
+
 from .Oturum import legacy_session
 import xmltodict
 
@@ -11,15 +13,15 @@ def kurGetir(kur_kodu:str = "USD"):
     Returns:
         str: Belirtilen döviz kurunun satış bilgilerini içeren string.
     """
-    url     = "https://www.tcmb.gov.tr/kurlar/today.xml"
-    oturum  = legacy_session()
+    url    = "https://www.tcmb.gov.tr/kurlar/today.xml"
+    oturum = legacy_session()
 
     try:
         response = oturum.get(url=url)
         response.raise_for_status()                        # response hatalarını yakalamak için
 
-        data    = xmltodict.parse(response.text)           # xml verisini dict'e çevirir
-        kurlar  = list(data["Tarih_Date"].get("Currency")) # tüm kurlar listeye alınır
+        data   = xmltodict.parse(response.text)  # xml verisini dict'e çevirir
+        kurlar = list(data["Tarih_Date"].get("Currency"))  # tüm kurlar listeye alınır
 
         for kur in kurlar:
             if kur["@Kod"] == kur_kodu:

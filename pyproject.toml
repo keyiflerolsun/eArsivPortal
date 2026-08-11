@@ -1,0 +1,47 @@
+[project]
+name        = "eArsivPortal"
+version     = "1.1.2"
+description = "GİB e-Arşiv Portal e-Fatura Oluşturucu"
+keywords    = ["eArsivPortal", "KekikAkademi", "keyiflerolsun"]
+license     = { text = "GPLv3+" }
+readme      = "README.md"
+
+authors = [
+    { name = "keyiflerolsun", email = "keyiflerolsun@gmail.com" }
+]
+
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",
+    "Programming Language :: Python :: 3"
+]
+
+requires-python = ">=3.14"
+dependencies    = [
+    "urllib3",
+    "requests",
+    "pydantic",
+    "parsel",
+    "cssselect",
+    "xmltodict",
+    "pytz"
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest"
+]
+
+[dependency-groups]
+dev = [
+    "pytest"
+]
+
+[project.urls]
+Homepage   = "https://github.com/keyiflerolsun/eArsivPortal"
+Repository = "https://github.com/keyiflerolsun/eArsivPortal.git"
+Issues     = "https://github.com/keyiflerolsun/eArsivPortal/issues"
+
+[build-system]
+requires      = ["hatchling"]
+build-backend = "hatchling.build"

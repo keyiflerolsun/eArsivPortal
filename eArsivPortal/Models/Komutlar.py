@@ -1,10 +1,10 @@
 # Bu araç @keyiflerolsun tarafından | @KekikAkademi için yazılmıştır.
 
-from pydantic.v1 import BaseModel, Field
+from pydantic import BaseModel, Field
 
 class Komut(BaseModel):
-    cmd:str   = Field(..., description="Komut Adı")
-    sayfa:str = Field(..., description="Sayfa Adı")
+    cmd   : str = Field(..., description="Komut Adı")
+    sayfa : str = Field(..., description="Sayfa Adı")
 
 class Komutlar(BaseModel):
     KULLANICI_BILGILERI_GETIR:Komut      = Komut(
@@ -40,10 +40,18 @@ class Komutlar(BaseModel):
         sayfa = "RG_SMSONAY"
     )
     SMSSIFRE_DOGRULA:Komut               = Komut(
-        cmd   = "0lhozfib5410mp",
+        cmd   = "EARSIV_PORTAL_SMSSIFRE_DOGRULA",
         sayfa = "RG_SMSONAY"
     )
     ADIMA_KESILEN_BELGELERI_GETIR:Komut  = Komut(
         cmd   = "EARSIV_PORTAL_ADIMA_KESILEN_BELGELERI_GETIR",
         sayfa = "RG_ALICI_TASLAKLAR"
+    )
+    KULLANICI_BILGILERI_KAYDET:Komut     = Komut(
+        cmd   = "EARSIV_PORTAL_KULLANICI_BILGILERI_KAYDET",
+        sayfa = "RG_KULLANICI"
+    )
+    FATURA_IMZALA:Komut                  = Komut(
+        cmd   = "EARSIV_PORTAL_FATURA_HSM_CIHAZI_ILE_IMZALA",
+        sayfa = "RG_BASITTASLAKLAR"
     )

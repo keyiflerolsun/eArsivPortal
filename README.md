@@ -38,7 +38,8 @@ pip install -U eArsivPortal
 ### <a href="#"><img width="16" src="https://raw.githubusercontent.com/keyiflerolsun/eArsivPortal/main/.github/icons/python.svg"></a> Lib
 
 ```python
-from eArsivPortal import eArsivPortal
+from eArsivPortal      import eArsivPortal
+from eArsivPortal.Libs import tutar_yaziyla
 
 portal = eArsivPortal(
     kullanici_kodu = "33333301",
@@ -78,6 +79,11 @@ Bilgilerim(
 ```
 
 ```python
+# Mükellef Bilgilerini Güncelleme
+portal.bilgileri_guncelle(bilgilerim_nesnesi)
+```
+
+```python
 portal.kisi_getir(vkn_veya_tckn="3333333301")
 
 #--------------------------------------------------------------#
@@ -107,6 +113,12 @@ portal.fatura_olustur(
 #--------------------------------------------------------------#
 
 FaturaOlustur(ettn='8cb401e3-ca6d-442a-8389-894459372134')
+```
+
+```python
+# Tutarı Türkçe Metne Çevirme Yardımcısı
+print(tutar_yaziyla(1234.56))
+# 'Yalnız Bin İki Yüz Otuz Dört Türk Lirası Elli Altı Kuruş'
 ```
 
 ```python
@@ -150,17 +162,27 @@ faturalar = portal.faturalari_getir(
 
 ```python
 html_fatura = portal.fatura_html(
-    ettn        = faturalar[0].ettn
+    ettn        = faturalar[0].ettn,
     onay_durumu = faturalar[0].onayDurumu
 )
 
 with open(f"{faturalar[0].aliciUnvanAdSoyad}.html", "w", encoding="utf-8") as dosya:
     dosya.write(html_fatura)
+
+# Doğrudan İndirme Bağlantısı (PDF / ZIP) Almak
+indirme_linki = portal.fatura_indirme_linki(
+    ettn        = faturalar[0].ettn,
+    onay_durumu = faturalar[0].onayDurumu
+)
 ```
 
 ```python
+# Taslak Fatura İmzalama (Doğrudan/HSM)
+portal.fatura_imzala(faturalar = faturalar[1])
+
+# Fatura Silme
 portal.fatura_sil(
-    faturalar = [faturalar[0], faturalar[1]]
+    faturalar = [faturalar[0], faturalar[1]],
     aciklama  = "Fatura silindi."
 )
 
@@ -188,7 +210,7 @@ portal.cikis_yap()
 
 ## 🌐 Telif Hakkı ve Lisans
 
-* *Copyright (C) 2023 by* [keyiflerolsun](https://github.com/keyiflerolsun) ❤️️
+* *Copyright (C) 2023 - 2026 by* [keyiflerolsun](https://github.com/keyiflerolsun) ❤️️
 * [GNU GENERAL PUBLIC LICENSE Version 3, 29 June 2007](https://github.com/keyiflerolsun/eArsivPortal/blob/master/LICENSE) *Koşullarına göre lisanslanmıştır..*
 
 ## ♻️ İletişim
