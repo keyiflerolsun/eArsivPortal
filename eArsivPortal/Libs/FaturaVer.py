@@ -2,7 +2,6 @@
 
 from .KurGetir   import kurGetir
 from .TutarMetin import tutar_yaziyla
-from uuid        import uuid4
 
 def fatura_ver(
     tarih:str         = "07/10/1995",
@@ -21,7 +20,7 @@ def fatura_ver(
     kdv_orani:int     = 20,
     kalemler:list[dict] = None
 ):
-    fatura_uuid = fatura_uuid or str(uuid4())
+    fatura_uuid = fatura_uuid or ""
     doviz       = "0" if para_birimi == "TRY" else str(kurGetir(para_birimi) or "0")
 
     if kalemler:

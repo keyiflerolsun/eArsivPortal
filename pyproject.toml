@@ -1,6 +1,6 @@
 [project]
 name        = "eArsivPortal"
-version     = "1.1.2"
+version     = "1.1.3"
 description = "GİB e-Arşiv Portal e-Fatura Oluşturucu"
 keywords    = ["eArsivPortal", "KekikAkademi", "keyiflerolsun"]
 license     = { text = "GPLv3+" }

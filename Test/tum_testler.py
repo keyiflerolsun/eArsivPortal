@@ -26,7 +26,8 @@ def test_fatura_ver_unit():
         urun_adi      = "Test Ürünü",
         fiyat         = 120
     )
-    assert fatura["faturaUuid"] != ""
+    assert fatura["faturaUuid"] == ""
+    assert fatura_ver(fatura_uuid="ozel-uuid")["faturaUuid"] == "ozel-uuid"
     assert fatura["matrah"] == "100.00"
     assert fatura["hesaplanankdv"] == "20.00"
     assert fatura["odenecekTutar"] == "120.00"
@@ -45,10 +46,16 @@ def test_bilgilerim():
 @pytest.mark.integration
 def test_fatura_olustur():
     try:
+        from datetime import datetime
+        from pytz     import timezone
+
         portal = eArsivPortal()
+        bugun  = datetime.now(timezone("Turkey")).strftime("%d/%m/%Y")
+        saat   = datetime.now(timezone("Turkey")).strftime("%H:%M:%S")
+
         fatura = portal.fatura_olustur(
-            tarih         = "29/05/2023",
-            saat          = "14:28:37",
+            tarih         = bugun,
+            saat          = saat,
             para_birimi   = "TRY",
             vkn_veya_tckn = "11111111111",
             ad            = "Ömer Faruk",
@@ -61,6 +68,7 @@ def test_fatura_olustur():
         )
         portal.cikis_yap()
         assert isinstance(fatura.ettn, str)
+        assert len(fatura.ettn) == 36
     except Exception as e:
         pytest.skip(f"GİB Portal canlı/test sunucusuna erişilemedi: {e}")
 

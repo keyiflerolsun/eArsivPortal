@@ -189,8 +189,9 @@ class eArsivPortal:
             **kwargs
         )
 
-        ettn      = None
+        ettn      = ""
         son_mesaj = None
+        basarili  = False
         for _ in range(max_tekrar):
             istek = self.__kod_calistir(
                 komut = self.komutlar.FATURA_OLUSTUR,
@@ -198,14 +199,25 @@ class eArsivPortal:
             )
             son_mesaj = istek.get("data")
             if son_mesaj and "Faturanız başarıyla oluşturulmuştur." in str(son_mesaj):
-                ettn = fatura.get("faturaUuid")
+                basarili = True
+                try:
+                    taslaklar = self.faturalari_getir(
+                        baslangic_tarihi = fatura.get("faturaTarihi"),
+                        bitis_tarihi     = fatura.get("faturaTarihi")
+                    )
+                    for t in reversed(taslaklar):
+                        if t.aliciVknTckn == fatura.get("vknTckn"):
+                            ettn = t.ettn
+                            break
+                except Exception:
+                    ettn = fatura.get("faturaUuid") or ""
                 break
             print(f"{fatura.get('aliciAdi')} {fatura.get('aliciSoyadi')} | {son_mesaj} | Yeniden Deneniyor..")
 
-        if not ettn:
+        if not basarili:
             raise eArsivPortalHatasi(f"Fatura oluşturulamadı: {son_mesaj}")
 
-        return self.__nesne_ver("FaturaOlustur", {"ettn": ettn})
+        return self.__nesne_ver("FaturaOlustur", {"ettn": ettn or ""})
 
     def faturalari_getir(self, baslangic_tarihi:str="01/05/2023", bitis_tarihi:str="28/05/2023") -> list[BaseModel]:
         istek = self.__kod_calistir(
