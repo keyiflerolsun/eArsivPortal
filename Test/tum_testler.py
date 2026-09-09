@@ -12,7 +12,7 @@ def test_tutar_yaziyla():
 
 def test_komutlar_duzeltme():
     komutlar = Komutlar()
-    assert komutlar.SMSSIFRE_DOGRULA.cmd == "EARSIV_PORTAL_SMSSIFRE_DOGRULA"
+    assert komutlar.SMSSIFRE_DOGRULA.cmd == "0lhozfib5410mp"
     assert komutlar.KULLANICI_BILGILERI_KAYDET.cmd == "EARSIV_PORTAL_KULLANICI_BILGILERI_KAYDET"
     assert komutlar.FATURA_IMZALA.cmd == "EARSIV_PORTAL_FATURA_HSM_CIHAZI_ILE_IMZALA"
 
