@@ -1,8 +1,10 @@
 # Bu araç @keyiflerolsun tarafından | @KekikAkademi için yazılmıştır.
 
-from eArsivPortal.Libs import fatura_ver, tutar_yaziyla, Komutlar
-from eArsivPortal      import eArsivPortal
 from pydantic          import BaseModel
+from pytz              import timezone
+from eArsivPortal      import eArsivPortal
+from eArsivPortal.Libs import fatura_ver, tutar_yaziyla, Komutlar
+from datetime          import datetime
 import pytest
 
 def test_tutar_yaziyla():
@@ -46,9 +48,6 @@ def test_bilgilerim():
 @pytest.mark.integration
 def test_fatura_olustur():
     try:
-        from datetime import datetime
-        from pytz     import timezone
-
         portal = eArsivPortal()
         bugun  = datetime.now(timezone("Turkey")).strftime("%d/%m/%Y")
         saat   = datetime.now(timezone("Turkey")).strftime("%H:%M:%S")

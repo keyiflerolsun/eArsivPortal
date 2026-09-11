@@ -1,18 +1,15 @@
 # Bu araç @keyiflerolsun tarafından | @KekikAkademi için yazılmıştır.
 
-from ..Libs       import legacy_session, Komut, Komutlar, fatura_ver
+from pydantic     import create_model, BaseModel
 from requests     import Response
-from json         import dumps
-from uuid         import uuid4
 from parsel       import Selector
-from urllib.parse import quote
+from pytz         import timezone
 from .Hatalar     import GirisYapilmadi, OturumSuresiDoldu, eArsivPortalHatasi
-
-from datetime import datetime
-from pytz     import timezone
-
-from typing   import Any
-from pydantic import create_model, BaseModel
+from ..Libs       import legacy_session, Komut, Komutlar, fatura_ver
+from datetime     import datetime
+from json         import dumps
+from urllib.parse import quote
+from uuid         import uuid4
 
 class eArsivPortal:
     def __init__(self, kullanici_kodu:str="33333315", sifre:str="1", test_modu:bool=True):
@@ -42,7 +39,7 @@ class eArsivPortal:
             veri = {"mesaj": veri}
         elif not isinstance(veri, dict):
             veri = {"veri": veri}
-        fields  = {k: (type(v) if v is not None else Any, v) for k, v in veri.items()}
+        fields  = {k : (type(v) if v is not None else object, v) for k, v in veri.items()}
         __nesne = create_model(isim, **fields)
 
         return __nesne()
@@ -291,7 +288,7 @@ class eArsivPortal:
             }
         )
 
-        return self.__nesne_ver("FaturaSil", {"mesaj": istek.get("data")})
+        return self.__nesne_ver("FaturaSil", {"mesaj" : istek.get("data")})
 
     def fatura_imzala(self, faturalar:list[dict] | dict) -> BaseModel:
         istek = self.__kod_calistir(
@@ -338,7 +335,7 @@ class eArsivPortal:
         )
         veri  = istek.get("data")
 
-        return self.__nesne_ver("GibSMSOnay", {"mesaj": veri.get("msg")})
+        return self.__nesne_ver("GibSMSOnay", {"mesaj" : veri.get("msg")})
 
     def satınalma_faturalari_getir(self, baslangic_tarihi:str="01/05/2023", bitis_tarihi:str="28/05/2023", hourlySearch:str="NONE") -> list[BaseModel]:
         istek = self.__kod_calistir(
